@@ -16,15 +16,10 @@ class Api::V1::ServerLogsController < ApplicationController
              logs: logs.select('logs.name as name').map{|log| log.name}.uniq.map{|name|
                {
                  name: name,
-                 data: logs.where('logs.name = ?', name).select('value').to_json
+                 data: logs.where('logs.name = ?', name).select('value, date_point')
                }
              }
            }
-    # render json: ServerLog
-    #          .joins(:server)
-    #          .joins(:log)
-    #          .select('ip_address, value, date_point, logs.name as log_name')
-    #          .where('servers.name = ?', @name)
   end
 
   def create
