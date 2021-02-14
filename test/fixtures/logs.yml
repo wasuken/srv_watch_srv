@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  date_point: 2021-02-14 13:56:34
+  value: 1.5
+
+two:
+  date_point: 2021-02-14 13:56:34
+  value: 1.5
