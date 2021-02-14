@@ -3,11 +3,28 @@ class Api::V1::ServerLogsController < ApplicationController
   skip_before_action :verify_authenticity_token
   def index
     @name = params[:name]
-    render json: ServerLog
-             .joins(:server)
+    srv = Server.find_by(name: @name)
+    logs = ServerLog
              .joins(:log)
-             .select('ip_address, value, date_point, logs.name as log_name')
-             .where('servers.name = ?', @name)
+             .where('server_id = ?', srv.id)
+    render json: {
+             server: {
+               name: srv.name,
+               ip_address: srv.ip_address,
+               mac_address: srv.mac_address
+             },
+             logs: logs.select('logs.name as name').map{|log| log.name}.uniq.map{|name|
+               {
+                 name: name,
+                 data: logs.where('logs.name = ?', name).select('value').to_json
+               }
+             }
+           }
+    # render json: ServerLog
+    #          .joins(:server)
+    #          .joins(:log)
+    #          .select('ip_address, value, date_point, logs.name as log_name')
+    #          .where('servers.name = ?', @name)
   end
 
   def create

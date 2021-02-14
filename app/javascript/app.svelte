@@ -1,4 +1,55 @@
 <script>
+  import FusionCharts from "fusioncharts";
+  import Charts from "fusioncharts/fusioncharts.charts";
+  import FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
+  import SvelteFC, {fcRoot} from "svelte-fusioncharts";
+
+  fcRoot(FusionCharts, Charts, FusionTheme);
+
+  // {
+  //   "label": "Venezuela",
+  //   "value": "290"
+  // }
+  dataSource = {
+    chart: {
+      caption: "Reach of Social Media Platforms amoung youth",
+      yaxisname: "% of youth on this platform",
+      subcaption: "2012-2016",
+      showhovereffect: "1",
+      numbersuffix: "%",
+      drawcrossline: "1",
+      plottooltext: "<b>$dataValue</b> of youth were on $seriesName",
+      theme: "fusion",
+    },
+    categories: [
+      {
+        category: [
+          {
+            label: "test",
+          },
+        ],
+      },
+    ],
+    dataset: [
+      {
+        seriesname: "",
+        data: [
+          {
+            value: "62",
+          },
+        ],
+      },
+    ],
+  };
+
+  const chartConfigs = {
+    type: "msline",
+    width: 600,
+    height: 400,
+    dataFormat: "json",
+    dataSource,
+  };
+
   let servers = [];
   let choose_server;
   let choose_server_logs = [];
