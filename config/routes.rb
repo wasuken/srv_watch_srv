@@ -7,5 +7,6 @@ Rails.application.routes.draw do
     end
   end
   get 'server_logs/index'
+  get '/', to: 'server_logs#index'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

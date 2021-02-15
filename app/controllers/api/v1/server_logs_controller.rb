@@ -13,10 +13,12 @@ class Api::V1::ServerLogsController < ApplicationController
                ip_address: srv.ip_address,
                mac_address: srv.mac_address
              },
-             logs: logs.select('logs.name as name').map{|log| log.name}.uniq.map{|name|
+             logs: logs.select('logs.name as name').distinct
+               .map{|log| log.name}.map{|name|
                {
                  name: name,
-                 data: logs.where('logs.name = ?', name).select('value, date_point')
+                 data: logs.where('logs.name = ?', name)
+                   .select('value, date_point')
                }
              }
            }
@@ -32,9 +34,13 @@ class Api::V1::ServerLogsController < ApplicationController
     @value = params[:value]
     @date_point = params[:date_point]
 
-    log = Log.create(date_point: @date_point, value: @value, name: @log_name)
-    srv = Server.find_by(@server_id)
-    unless @server_id || srv
+    srv = nil
+    
+    if Server.where('id = ?', @server_id).exists?
+      srv = Server.find(@server_id)
+    elsif Server.where('name = ?', @server_name).exists?
+      srv = Server.find_by(name: @server_name)
+    else
       srv = Server.create(
         name: @server_name,
         ip_address: @ip_address,
@@ -42,6 +48,7 @@ class Api::V1::ServerLogsController < ApplicationController
         other_info: @other_info
       )
     end
+    log = Log.create(date_point: @date_point, value: @value, name: @log_name)
     ServerLog.create(server_id: srv.id, log_id: log.id)
 
     render json: {server_id: srv.id}

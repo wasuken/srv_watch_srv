@@ -19,7 +19,13 @@
       labels: log.data.map((x) => x.date_point),
       datasets: [
         {
-          values: log.data.map((x) => parseFloat(x.value)),
+          values: log.data.map((x) => {
+            if (x.value) {
+              return parseFloat(x.value);
+            } else {
+              return 0.0;
+            }
+          }),
         },
       ],
     };
